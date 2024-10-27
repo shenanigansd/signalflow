@@ -1,3 +1,9 @@
 [build-system]
 requires = ["setuptools", "wheel", "setuptools_scm", "cmake", "scikit-build"]
 build-backend = "setuptools.build_meta"
+
+[tool.cibuildwheel.linux]
+before-all = "apt-get install -y git cmake g++ python3-pip libasound2-dev libsndfile1-dev libsoundio-dev fftw3-dev"
+
+[tool.cibuildwheel.macos]
+before-all = "brew install cmake libsndfile libsoundio"
