@@ -2,8 +2,11 @@
 requires = ["setuptools", "wheel", "setuptools_scm", "cmake", "scikit-build"]
 build-backend = "setuptools.build_meta"
 
+[tool.cibuildwheel]
+manylinux-x86_64-image = "manylinux_2_24"
+
 [tool.cibuildwheel.linux]
-before-all = "yum install -y libasound2 libsndfile1 libsoundio-devel fftw3-devel"
+before-all = "apt-get install -y git cmake g++ python3-pip libasound2-dev libsndfile1-dev libsoundio-dev fftw3-dev"
 
 [tool.cibuildwheel.macos]
 before-all = "brew install libsndfile libsoundio"
