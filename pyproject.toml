@@ -6,4 +6,4 @@ build-backend = "setuptools.build_meta"
 before-all = "yum install -y libasound2 libsndfile1 libsoundio-devel fftw3-devel"
 
 [tool.cibuildwheel.macos]
-before-all = "brew install cmake libsndfile libsoundio"
+before-all = "brew install libsndfile libsoundio"
