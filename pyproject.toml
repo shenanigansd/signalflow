@@ -34,18 +34,14 @@ requires = [
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
-package-dir = {"" = "auxiliary/libs"}
+package-dir = { "" = "auxiliary/libs" }
 
 [tool.setuptools.package-data]
 signalflow_stubs = ["*.pyi"]
 signalflow = ["*.pyd"]
 
 [tool.cibuildwheel]
-skip = [
-  "pp*",
-  "*-win32",
-  "*_i686",
-]
+skip = ["pp*", "*-win32", "*_i686"]
 
 [tool.cibuildwheel.linux]
 archs = ["x86_64"]
@@ -83,3 +79,16 @@ before-all = [
     "brew install cmake python libsndfile",
     "curl https://raw.githubusercontent.com/mackron/miniaudio/master/miniaudio.h -o source/include/signalflow/node/io/output/miniaudio-library.h",
 ]
+
+[[tool.cibuildwheel.overrides]]
+select = "*-macosx_x86_64"
+repair-wheel-command = "DYLD_LIBRARY_PATH=/usr/local/lib delocate-wheel -w {dest_dir} -v {wheel}"
+
+[[tool.cibuildwheel.overrides]]
+select = "*-macosx_arm64"
+repair-wheel-command = "DYLD_LIBRARY_PATH=/opt/homebrew/lib delocate-wheel -w {dest_dir} -v {wheel}"
+
+[[tool.cibuildwheel.overrides]]
+select = "cp313-macosx_*"
+inherit.environment = "append"
+environment = { MACOSX_DEPLOYMENT_TARGET = "13.0" }
