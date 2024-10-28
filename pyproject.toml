@@ -41,13 +41,10 @@ signalflow_stubs = ["*.pyi"]
 signalflow = ["*.pyd"]
 
 [tool.cibuildwheel]
-build = [
-    "cp38-manylinux*",
-    "cp39-manylinux*",
-    "cp310-manylinux*",
-    "cp311-manylinux*",
-    "cp312-manylinux*",
-    "cp313-manylinux*",
+skip = [
+  "pp*",
+  "*-win32",
+  "*_i686",
 ]
 
 [tool.cibuildwheel.linux]
