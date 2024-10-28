@@ -85,10 +85,10 @@ select = "*-macosx_x86_64"
 repair-wheel-command = "DYLD_LIBRARY_PATH=/usr/local/lib delocate-wheel -w {dest_dir} -v {wheel}"
 
 [[tool.cibuildwheel.overrides]]
-select = "*-macosx_arm64"
-repair-wheel-command = "DYLD_LIBRARY_PATH=/opt/homebrew/lib delocate-wheel -w {dest_dir} -v {wheel}"
-
-[[tool.cibuildwheel.overrides]]
-select = "cp313-macosx_*"
+select = "*-macosx_x86_64"
 inherit.environment = "append"
 environment = { MACOSX_DEPLOYMENT_TARGET = "13.0" }
+
+[[tool.cibuildwheel.overrides]]
+select = "*-macosx_arm64"
+repair-wheel-command = "DYLD_LIBRARY_PATH=/opt/homebrew/lib delocate-wheel -w {dest_dir} -v {wheel}"
