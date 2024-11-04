@@ -51,7 +51,7 @@ In Visual Studio code, create a new folder to contain your new SignalFlow projec
 
 ## 5. Create a notebook
 
-Select `File → New File...`, and select `Jupyter Notebook`. You should see the screen layout change to display an empty black text block (in Jupyter parlance, a "cell"). 
+Select `File → New File...`, and select `Jupyter Notebook`. You should see the screen layout change to display an empty black text block (in Jupyter terminology, a "cell"). 
 
 ---
 
@@ -128,7 +128,7 @@ Create a new cell by pressing `b`, and in the new cell, run:
 graph = AudioGraph()
 ```
 
-This will create and start a new global audio [processing graph](../../graph/index.md), using the system's default audio output. You should see the name of the audio device printed to the notebook.
+This will create and start a new global audio [processing graph](../graph/index.md), using the system's default audio output. You should see the name of the audio device printed to the notebook.
 
 This also needs to be run once per session. In fact, only one global `AudioGraph` object can be created.  
 
@@ -163,10 +163,10 @@ The `pan` property of `StereoPanner` controls its position in the stereo field f
 panner.pan = -1
 ```
 
-Finally, to stop the playback:
+Finally, to stop all playback:
 
 ```python
-output.stop()
+graph.clear()
 ```
 
 ---
@@ -174,5 +174,3 @@ output.stop()
 {%
    include-markdown "installation/next-steps.md"
 %}
- 
----
