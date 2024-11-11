@@ -1,3 +1,94 @@
+[project]
+name = "signalflow"
+version = "0.5.0"
+description = "SignalFlow is a sound synthesis library designed for clear and concise expression of sonic ideas"
+readme = "README.md"
+authors = [{ name = "Daniel Jones", email = "dan@erase.net" }]
+license = { text = "MIT" }
+keywords = ["audio", "sound", "synthesis", "dsp", "sound-synthesis"]
+classifiers = [
+    "Topic :: Multimedia :: Sound/Audio",
+    "Topic :: Multimedia :: Sound/Audio :: Sound Synthesis",
+    "Topic :: Artistic Software",
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+]
+requires-python = ">=3.8"
+dependencies = ["numpy"]
+
+[project.optional-dependencies]
+test = ["pytest", "numpy", "scipy"]
+
+[project.scripts]
+signalflow = "signalflow_cli:main"
+
 [build-system]
-requires = ["setuptools", "wheel", "setuptools_scm", "cmake", "scikit-build"]
+requires = [
+    "setuptools",
+    "setuptools_scm",
+    "cmake",
+    "scikit-build",
+    "pytest-runner",
+    "pybind11-stubgen",
+]
 build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+package-dir = { "" = "auxiliary/libs" }
+
+[tool.setuptools.package-data]
+signalflow_stubs = ["*.pyi"]
+signalflow = ["*.pyd"]
+
+[tool.cibuildwheel]
+skip = ["pp*", "*-win32", "*_i686"]
+
+[tool.cibuildwheel.linux]
+archs = ["x86_64"]
+before-all = [
+    "yum install -y fftw-devel wget python3 sudo gcc",
+    # jackaudio
+    "wget https://github.com/jackaudio/jack2/archive/v1.9.22.tar.gz",
+    "tar xzf v1.9.22.tar.gz",
+    "cd jack2-1.9.22",
+    "python3 ./waf configure",
+    "/usr/bin/sudo python3 ./waf install",
+    "cd ..",
+    # "alsa-lib",
+    "wget https://www.alsa-project.org/files/pub/lib/alsa-lib-1.2.9.tar.bz2",
+    "tar xjf alsa-lib-1.2.9.tar.bz2",
+    "cd alsa-lib-1.2.9",
+    "./configure",
+    "make",
+    "/usr/bin/sudo make install",
+    "cd ..",
+    # libsndfile
+    "git clone https://github.com/libsndfile/libsndfile.git",
+    "cd libsndfile",
+    "cmake -DBUILD_SHARED_LIBS=1 .",
+    "make",
+    "make install",
+    "cd ..",
+    # miniaudio
+    "curl https://raw.githubusercontent.com/mackron/miniaudio/master/miniaudio.h -o source/include/signalflow/node/io/output/miniaudio-library.h",
+]
+
+[tool.cibuildwheel.macos]
+archs = ["arm64", "x86_64"]
+before-all = [
+    "brew install cmake python libsndfile",
+    "curl https://raw.githubusercontent.com/mackron/miniaudio/master/miniaudio.h -o source/include/signalflow/node/io/output/miniaudio-library.h",
+]
+
+[[tool.cibuildwheel.overrides]]
+select = "*-macosx_x86_64"
+repair-wheel-command = "DYLD_LIBRARY_PATH=/usr/local/lib delocate-wheel -w {dest_dir} -v {wheel}"
+
+[[tool.cibuildwheel.overrides]]
+select = "*-macosx_x86_64"
+inherit.environment = "append"
+environment = { MACOSX_DEPLOYMENT_TARGET = "13.0" }
+
+[[tool.cibuildwheel.overrides]]
+select = "*-macosx_arm64"
+repair-wheel-command = "DYLD_LIBRARY_PATH=/opt/homebrew/lib delocate-wheel -w {dest_dir} -v {wheel}"
